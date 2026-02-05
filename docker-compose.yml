@@ -1,0 +1,30 @@
+services:
+  # The Database: Postgres with pgvector for AI memory
+  db:
+    image: ankane/pgvector:latest # Specialized image with vector support
+    container_name: academic_db
+    restart: always
+    environment:
+      POSTGRES_DB: academic_helper
+      POSTGRES_USER: student
+      POSTGRES_PASSWORD: secure_password
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+
+  # The Automation Brain: n8n
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n_app
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+    volumes:
+      - ./n8n_data:/home/node/.n8n
+    depends_on:
+      - db
