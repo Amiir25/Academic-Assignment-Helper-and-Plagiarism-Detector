@@ -13,26 +13,6 @@ A FastAPI-based academic assignment helper with RAG (Retrieval-Augmented Generat
 
 ---
 
-## Repository Structure
-
-academic-assignment-helper/
-├── backend/
-│ ├── Dockerfile
-│ ├── docker-compose.yml
-│ ├── main.py
-│ ├── models.py
-│ ├── rag_service.py
-│ ├── seed_academic_sources.py
-│ ├── requirements.txt
-├── n8n_workflows/
-│ └── workflow_export.json
-├── data/
-│ └── sample_academic_sources.json
-├── .env.example
-└── README.md
-
----
-
 ## Prerequisites
 
 - Docker & Docker Compose
