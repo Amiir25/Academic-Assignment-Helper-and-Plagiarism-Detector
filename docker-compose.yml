@@ -1,7 +1,7 @@
 services:
-  # The Database: Postgres with pgvector for AI memory
+  # 1. The Database: Postgres with pgvector for AI memory
   db:
-    image: ankane/pgvector:latest # Specialized image with vector support
+    image: ankane/pgvector:latest
     container_name: academic_db
     restart: always
     environment:
@@ -12,8 +12,10 @@ services:
       - "5433:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - academic_network
 
-  # The Automation Brain: n8n
+  # 2. The Automation Brain: n8n
   n8n:
     image: n8nio/n8n:latest
     container_name: n8n_app
@@ -21,10 +23,42 @@ services:
     ports:
       - "5678:5678"
     environment:
-      - N8N_HOST=localhost
+      - N8N_HOST=n8n
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=db
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=academic_helper
+      - DB_POSTGRESDB_USER=student
+      - DB_POSTGRESDB_PASSWORD=secure_password
     volumes:
       - ./n8n_data:/home/node/.n8n
+      - ./uploads:/home/node/uploads # Shared volume to access files
     depends_on:
       - db
+    networks:
+      - academic_network
+
+  # 3. The Python Backend: FastAPI
+  backend:
+    build: 
+      context: ./backend # Path to your backend folder containing the Dockerfile
+    container_name: fastapi_backend
+    restart: always
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./backend:/app
+      - ./uploads:/app/uploads # Shared volume to save files for n8n to read
+    environment:
+      - DATABASE_URL=postgresql://student:secure_password@db:5432/academic_helper
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook/assignment
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+networks:
+  academic_network:
+    driver: bridge
