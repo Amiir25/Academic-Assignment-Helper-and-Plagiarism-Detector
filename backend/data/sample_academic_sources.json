@@ -1,0 +1,18 @@
+[
+  {
+    "title": "Machine Learning in Education",
+    "authors": "John Doe, Jane Smith",
+    "publication_year": 2022,
+    "abstract": "This paper explores machine learning applications in educational assessment.",
+    "full_text": "Machine learning is increasingly used in educational systems...",
+    "source_type": "paper"
+  },
+  {
+    "title": "Introduction to Academic Writing",
+    "authors": "Alice Brown",
+    "publication_year": 2020,
+    "abstract": "A guide to academic writing standards and plagiarism avoidance.",
+    "full_text": "Academic writing requires clarity, citation, and originality...",
+    "source_type": "textbook"
+  }
+]
